@@ -1,0 +1,54 @@
+
+services:
+  eureka-server:
+    image: library-eureka:1.0
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - library-net
+
+  auth-service:
+    image: library-auth:1.0
+    container_name: auth-service
+    depends_on:
+      - eureka-server
+    networks:
+      - library-net
+
+  book-service-1:
+    image: library-book:1.0
+    container_name: book-service-1
+    environment:
+      SERVER_PORT: 8082
+    depends_on:
+      - eureka-server
+    networks:
+      - library-net
+
+  book-service-2:
+    image: library-book:1.0
+    container_name: book-service-2
+    environment:
+      SERVER_PORT: 8083
+    depends_on:
+      - eureka-server
+    networks:
+      - library-net
+
+  api-gateway:
+    image: library-gateway:1.0
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+      - auth-service
+      - book-service-1
+      - book-service-2
+    networks:
+      - library-net
+
+networks:
+  library-net:
+    driver: bridge
