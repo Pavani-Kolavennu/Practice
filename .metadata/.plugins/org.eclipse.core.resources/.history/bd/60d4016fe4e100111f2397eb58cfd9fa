@@ -1,0 +1,5 @@
+package com.pavani.arithmeticapi.controller;
+
+public class ArithmeticController {
+
+}
